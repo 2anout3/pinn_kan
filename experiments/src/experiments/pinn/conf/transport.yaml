@@ -1,0 +1,42 @@
+# u_t + cos(pi x) u_x = 0, u(0, x) = hat, u = 0 at the space ends.
+defaults:
+  - base
+  - domain: rect
+  - pde: transport
+  - initial: hat
+  - boundary: constant
+  - model@models.kan_spline: kan_bsplines
+  - model@models.kan_cheby: chebykan
+  - model@models.mlp: mlp
+  - _self_
+
+domain: {start: [0.0, 0.0], end: [5.0, 6.0], steps: [501, 601]}
+boundary: {value: 0.0}
+
+stages:
+  adam:
+    trainer:
+      epochs: 3000
+  lbfgs:
+    trainer:
+      maxIter: 3000
+
+models:
+  kan_spline:
+    features: [2, 3, 5, 6, 7, 1]
+    gridUpdateEvery: 250   # 6 grid updates during the first half of adam (after warmup)
+    gridUpdateUntil: 1501
+  kan_cheby:
+    features: [2, 13, 11, 7, 5, 3, 1]
+  mlp:
+    features: [2, 65, 55, 45, 35, 30, 25, 15, 10, 1]
+
+plots:
+  solution: {outputNames: [u]}
+  slices:
+    outputNames: [u]
+    times: [0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0]
+    show: true
+
+checkpoint:
+  load: [kan_spline, kan_cheby, mlp]      # e.g. [mlp, kan_cheby]; from the command line: checkpoint.load=[mlp]

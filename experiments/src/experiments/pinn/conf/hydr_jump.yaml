@@ -1,0 +1,51 @@
+defaults:
+  - base
+  - domain: rect
+  - pde: shallow_water
+  - initial: hydraulic_jump
+  - boundary: hydraulic_jump
+  - model@models.kan_spline: kan_bsplines
+  - model@models.kan_cheby: chebykan
+  # - model@models.mlp: mlp
+  - _self_
+
+dam: {position: 0.0, heightLeft: 1.0, heightRight: 2.0}
+domain: {start: [0.0, -500.0], end: [40.0, 500.0], steps: [1201, 5001]}
+pde: {gravity: 10.0}
+initial: {position: '${dam.position}', heightLeft: '${dam.heightLeft}', heightRight: '${dam.heightRight}'}
+boundary: {position: '${dam.position}', heightLeft: '${dam.heightLeft}', heightRight: '${dam.heightRight}'}
+
+samples:
+  initial: {count: 1500}
+  boundary: {count: 1000}
+  pde: {count: 32756}
+
+models:
+  kan_spline:
+    features: [2, 3, 5, 6, 7, 2]
+    gridUpdateEvery: 250
+    gridUpdateUntil: 1700
+  kan_cheby:
+    features: [2, 13, 11, 7, 5, 3, 2]
+  # mlp:
+  #   features: [2, 65, 55, 45, 35, 30, 25, 15, 10, 2]
+
+plots:
+  solution: {outputNames: [h, q]}
+  slices:
+    outputNames: [h, q]
+    times: [0.0, 3.0, 30.0]
+
+stages:
+  warmup:  # initial/boundary only, before the PDE term is switched on
+    condition: {weights: {initial: 100.0, boundary: 1.0}}
+    trainer: {epochs: 200, lr: 1.0e-3}
+  adam:
+    condition: {weights: {initial: 100.0, boundary: 1.0, pde: 1.0}}
+    trainer: {epochs: 2000, lr: 1.0e-3, lossThreshold: 1.0e-2}
+  lbfgs:
+    condition: {weights: '${stages.adam.condition.weights}'}
+    trainer: {maxIter: 2000}
+
+checkpoint:
+  load: [kan_spline, kan_cheby]      # e.g. [mlp, kan_cheby]; from the command line: checkpoint.load=[mlp]

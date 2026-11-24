@@ -1,0 +1,43 @@
+[project]
+name = "pinn"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Artem", email = "a.vdovin@g.nsu.ru" }
+]
+requires-python = ">=3.13"
+dependencies = [
+    "pinn-networks",
+    "pinn-platform",
+    "experiments",
+]
+
+[dependency-groups]
+dev = ["ruff", "pytest"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+
+[tool.ruff.lint]
+select = [
+    "E", "F",
+    "I",
+    "UP",
+    "B",
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["pinn_networks", "pinn_platform", "experiments"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests", "packages/*/tests"]
+
+[tool.uv.workspace]
+members = ["packages/*", "experiments"]
+
+[tool.uv.sources]
+pinn-networks = { workspace = true }
+pinn-platform = { workspace = true }
+experiments = { workspace = true }

@@ -1,0 +1,11 @@
+defaults:
+  - chebykan_schema
+  - _self_
+
+features: ???
+degree: 5
+initScheme: power_law
+initAlpha: 0.25
+initBeta: 1.25
+inputBoundary: null
+seed: 0

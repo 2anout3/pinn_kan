@@ -1,0 +1,5 @@
+defaults:
+  - constant_schema
+  - _self_
+
+value: 0.0

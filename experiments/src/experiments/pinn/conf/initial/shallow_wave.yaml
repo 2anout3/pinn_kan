@@ -1,0 +1,7 @@
+defaults:
+  - shallow_wave_schema
+  - _self_
+
+gravity: 10.0
+spaceStart: 0.0
+spaceEnd: 10.0

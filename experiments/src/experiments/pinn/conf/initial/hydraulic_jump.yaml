@@ -1,0 +1,8 @@
+defaults:
+  - hydraulic_jump_schema
+  - _self_
+
+gravity: 10.0
+position: 0.0
+heightLeft: 2.0
+heightRight: 1.0

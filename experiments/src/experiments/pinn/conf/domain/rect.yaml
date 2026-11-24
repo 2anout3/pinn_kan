@@ -1,0 +1,7 @@
+defaults:
+  - rect_schema
+  - _self_
+
+start: ???
+end: ???
+steps: ???

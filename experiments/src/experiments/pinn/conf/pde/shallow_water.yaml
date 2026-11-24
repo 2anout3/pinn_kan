@@ -1,0 +1,5 @@
+defaults:
+  - shallow_water_schema
+  - _self_
+
+gravity: 10.0

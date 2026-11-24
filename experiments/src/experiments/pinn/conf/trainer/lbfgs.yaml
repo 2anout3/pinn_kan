@@ -1,0 +1,13 @@
+defaults:
+  - lbfgs_schema
+  - _self_
+
+maxIter: ???
+lr: 1.0
+maxEval: null
+toleranceGrad: 1.0e-09
+toleranceChange: 1.0e-12
+historySize: 100
+lineSearchFn: strong_wolfe
+lossThreshold: null
+logInterval: 100

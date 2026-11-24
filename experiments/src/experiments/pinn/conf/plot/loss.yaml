@@ -1,0 +1,8 @@
+defaults:
+  - loss_schema
+  - _self_
+
+title: loss
+show: false
+outputPath: null
+logScale: true

@@ -1,0 +1,5 @@
+defaults:
+  - weighted_schema
+  - _self_
+
+weights: ???

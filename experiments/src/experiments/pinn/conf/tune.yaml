@@ -1,0 +1,35 @@
+tune_config:
+  model: kan_cheby
+  n_trials: 20
+  count_layers: {min: 1, max: 10}
+  width: {min: 3, max: 20}
+  seed: {low: 0, high: 56854}
+  adam_epochs: {low: 500, high: 3000}
+  lbfgs_maxiter: {low: 500, high: 3000}
+  validation:
+    count: 8192  # interior PDE points
+    initial_count: null  # null uses the whole initial line
+    boundary_count: null  # null uses all boundary pairs
+    seed: 2049
+
+signif_config:
+  model: ${tune_config.model}
+  n_trials: 50
+  sampler_seed: 0
+  target_quantile: 0.25
+  seeds: [0, 17, 42, 1027, 4513, 8968, 56854, 23447]
+  architectures:  # hidden layer widths
+    compact: [8]
+    balanced: [16, 16]
+    deep: [12, 12, 12, 12]
+    tapered: [24, 16, 8]
+  trainers:
+    warmup:
+      lr: {low: 0.0001, high: 0.01, log: true}
+      epochs: {low: 50, high: 200}
+    adam:
+      lr: {low: 0.0001, high: 0.01, log: true}
+      epochs: {low: 500, high: 3000}
+    lbfgs:
+      lr: {low: 0.1, high: 1.0, log: true}
+      maxIter: {low: 500, high: 3000}

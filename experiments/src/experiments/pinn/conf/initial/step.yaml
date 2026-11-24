@@ -1,0 +1,3 @@
+defaults:
+  - step_schema
+  - _self_

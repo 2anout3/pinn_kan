@@ -1,0 +1,5 @@
+defaults:
+  - grid_schema
+  - _self_
+
+batchSize: 65536

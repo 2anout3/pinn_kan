@@ -1,0 +1,7 @@
+defaults:
+  - dam_break_schema
+  - _self_
+
+position: 1.0
+heightLeft: 1.5
+heightRight: 0.5

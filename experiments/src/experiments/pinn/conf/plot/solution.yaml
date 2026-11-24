@@ -1,0 +1,9 @@
+defaults:
+  - solution_schema
+  - _self_
+
+title: solution
+axisNames: null
+outputNames: null
+show: false
+outputPath: null

@@ -1,0 +1,3 @@
+defaults:
+  - periodic_schema
+  - _self_

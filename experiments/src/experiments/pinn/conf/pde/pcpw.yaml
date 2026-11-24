@@ -1,0 +1,8 @@
+defaults:
+  - pcpw_schema
+  - _self_
+
+fluxCoefficient: 1.0
+momentumCoefficient: 1.0
+heightCoefficient: 5.0
+heightFloor: 0.001

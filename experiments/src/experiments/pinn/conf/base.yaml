@@ -1,0 +1,65 @@
+# Common part of the experiments: data sampling, training stages, evaluation and plots.
+# An experiment adds the problem (domain, pde, initial, boundary) and the models.
+defaults:
+  - loss: mse
+  - sample@samples.initial: random
+  - sample@samples.boundary: random
+  - sample@samples.pde: random
+  - condition@stages.warmup.condition: weighted
+  - trainer@stages.warmup.trainer: adam
+  - condition@stages.adam.condition: weighted
+  - trainer@stages.adam.trainer: adam
+  - condition@stages.lbfgs.condition: weighted
+  - trainer@stages.lbfgs.trainer: lbfgs
+  - evaluator: grid
+  - plot@plots.loss: loss
+  - plot@plots.solution: solution
+  - plot@plots.slices: slices
+  - tune
+  - _self_
+
+seed: 1027 #23857
+deterministic: false
+# Precision and device of the whole run: the builder passes them to the domain and to every
+# model (their configs have no dtype / device of their own).
+dtype: float64                # float32 | float64
+device: ${pick_device:auto}   # cpu | cuda | cuda:1 | auto (cuda if available, else cpu)
+plotDir: ${hydra:runtime.output_dir}/plots  # null — do not save plots
+
+samples:
+  initial: {count: 150}
+  boundary: {count: 100}
+  pde: {count: 16384}
+
+# Stages run in this order; each trains on its own weighted sum of conditions
+# (initial, boundary, pde), and the next one continues from the model of the previous.
+schedule: [warmup, adam, lbfgs]
+stages:
+  warmup:  # initial/boundary only, before the PDE term is switched on
+    condition: {weights: {initial: 100.0, boundary: 1.0}}
+    trainer: {epochs: 200, lr: 1.0e-3}
+  adam:
+    condition: {weights: {initial: 100.0, boundary: 1.0, pde: 1.0}}
+    trainer: {epochs: 1646, lr: 1.0e-3, lossThreshold: 1.0e-2}
+  lbfgs:
+    condition: {weights: '${stages.adam.condition.weights}'}
+    trainer: {maxIter: 1684}
+
+# Model weights live in <dir>/<model label>.pt. Trained models are saved there (save),
+# models listed in load are not trained: they are created by their config and get the
+# saved weights, so their config must match the saved architecture.
+checkpoint:
+  dir: ${hydra:runtime.cwd}/checkpoints/${hydra:job.config_name}
+  save: true
+  load: []      # e.g. [mlp, kan_cheby]; from the command line: checkpoint.load=[mlp]
+  strict: true  # false — skip missing / unexpected keys of the state_dict
+
+plots:
+  solution: {axisNames: [t, x]}
+  slices: {axisNames: [t, x], show: true}
+
+hydra:
+  job_logging:
+    formatters:
+      simple:
+        format: "[%(name)s][%(levelname)s] - %(message)s"

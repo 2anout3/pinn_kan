@@ -1,0 +1,3 @@
+defaults:
+  - mse_schema
+  - _self_

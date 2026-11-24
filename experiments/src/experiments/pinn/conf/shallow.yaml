@@ -1,0 +1,29 @@
+# Shallow water (h, q) with a smooth periodic wave on [0, 10].
+defaults:
+  - base
+  - domain: rect
+  - pde: shallow_water
+  - initial: shallow_wave
+  - boundary: periodic
+  - model@models.kan_spline: kan_bsplines
+  - model@models.mlp: mlp
+  - _self_
+
+gravity: 10.0
+domain: {start: [0.0, 0.0], end: [3.0, 10.0], steps: [201, 201]}
+pde: {gravity: '${gravity}'}
+initial: {gravity: '${gravity}', spaceStart: '${domain.start[1]}', spaceEnd: '${domain.end[1]}'}
+
+models:
+  kan_spline:
+    features: [2, 13, 11, 9, 7, 5, 3, 2]
+    gridUpdateEvery: 250
+    gridUpdateUntil: 1700
+  mlp:
+    features: [2, 65, 55, 45, 35, 30, 25, 15, 10, 2]
+
+plots:
+  solution: {outputNames: [h, q]}
+  slices:
+    outputNames: [h, q]
+    times: [0.0, 0.25, 0.5, 0.75, 1.0, 1.5, 2.0, 2.5, 3.0]

@@ -1,0 +1,3 @@
+defaults:
+  - cos_schema
+  - _self_

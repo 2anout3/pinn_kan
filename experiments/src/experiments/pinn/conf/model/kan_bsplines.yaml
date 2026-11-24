@@ -1,0 +1,22 @@
+defaults:
+  - kan_bsplines_schema
+  - _self_
+
+features: ???
+intervalsCount: 10
+degree: 7
+gridUpdateRegularization: 0.001
+gridUpdateMaxRelativeError: 0.2
+gridUpdateMaxPointwiseError: 0.5
+modelGridMaxRelativeError: 0.2
+modelGridMaxPointwiseError: 0.1
+modelGridMaxJacobianRelativeError: 0.5
+modelGridMaxJacobianPointwiseError: 0.2
+initScheme: power_law
+initAlpha: 0.25
+initBeta: 1.0
+inputBoundary: null
+gridUpdateEvery: 0
+gridUpdateUntil: 0
+gridPointsCount: 500
+seed: 0

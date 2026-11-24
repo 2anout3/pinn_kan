@@ -1,0 +1,37 @@
+# Dam break: shallow water (h, q), water at rest with a height step at x = 1.
+defaults:
+  - base
+  - domain: rect
+  - pde: shallow_water
+  - initial: dam_break
+  - boundary: dam_break
+  - model@models.kan_spline: kan_bsplines
+  - model@models.kan_cheby: chebykan
+  - model@models.mlp: mlp
+  - _self_
+
+dam: {position: 1.0, heightLeft: 1.5, heightRight: 0.5}
+domain: {start: [0.0, 0.0], end: [0.2, 2.0], steps: [201, 401]}
+pde: {gravity: 9.81}
+initial: {position: '${dam.position}', heightLeft: '${dam.heightLeft}', heightRight: '${dam.heightRight}'}
+boundary: {position: '${dam.position}', heightLeft: '${dam.heightLeft}', heightRight: '${dam.heightRight}'}
+
+samples:
+  initial: {count: null}  # the whole line t = 0
+  pde: {count: 16384}
+
+models:
+  kan_spline:
+    features: [2, 13, 11, 9, 7, 5, 3, 2]
+    gridUpdateEvery: 250
+    gridUpdateUntil: 1700
+  kan_cheby:
+    features: [2, 13, 11, 9, 7, 5, 3, 2]
+  mlp:
+    features: [2, 65, 55, 45, 35, 30, 25, 15, 10, 2]
+
+plots:
+  solution: {outputNames: [h, q]}
+  slices:
+    outputNames: [h, q]
+    times: [0.0, 0.06, 0.13, 0.2]

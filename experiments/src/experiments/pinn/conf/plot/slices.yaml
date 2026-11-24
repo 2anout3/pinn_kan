@@ -1,0 +1,11 @@
+defaults:
+  - slices_schema
+  - _self_
+
+times: ???
+title: slices
+axisNames: null
+outputNames: null
+columns: 3
+show: false
+outputPath: null
